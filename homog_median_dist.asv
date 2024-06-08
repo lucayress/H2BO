@@ -45,8 +45,11 @@ labels_homog = labels(ind_homog,:);
 ind_heter = find(sppx_dist_ratio > tau_homog);
 labels_heter = labels(ind_heter,:);
 if strcmp(show1,'T')
-    fprintf('heter_sppx\t  = %g \n', length(ind_heter));
-    fprintf('homog_sppx\t  = %g \n', length(ind_homog));
+    fprintf('heter_sppx = %g \n', length(ind_heter));
+    fprintf('homog_sppx = %g \n', length(ind_homog));
+    img_homog_percent = 100*length(ind_homog)/length(ind_heter);
+    fprintf('homog_sppx = %.1f %% \n', img_homog_percent);
+
 end
 
 %% Display superpixels homogeneity classification

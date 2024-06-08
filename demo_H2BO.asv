@@ -20,9 +20,9 @@ randn('state',10);
 
 %% INPUT Parameters
 
-SNR = 20;
+SNR = 320;
 path_data = 'data/';
-path_output = 'output/';
+path_output = 'results/';
 image_name = 'DC3';         % dataset
 
 slic_reg     = 0.00225;
@@ -96,10 +96,8 @@ Y2 = Y2./scfact;
 tic
 
 %% Hierarchical Homogeneity-Based Oversegmentation (H2BO)
-fprintf('--------------------------------------------------\n');
-fprintf('-- Hierarchical Homogeneity-Based Oversegmentation\n');
-fprintf('-- H2BO\n\n');
-fprintf('Computing superpixels ...\n', length(slic_size)-1);
+fprintf('-- Hierarchical Homogeneity-Based Oversegmentation (H2BO)\n\n');
+fprintf('Computing superpixels in R = %d scales ...\n', length(slic_size)-1);
 
 tic
 sppx = H2BO(Y2, slic_size, slic_reg, tau_outliers, tau_homog);
@@ -107,12 +105,12 @@ time = toc;
 fprintf('Exec. time = %.2f s\n\n',time);
 
 %% Homogeneity test - Final
-fprintf('num_sppx\t  = %d\n',length(unique(sppx(:))));
+fprintf('num_sppx  = %d\n',length(unique(sppx(:))));
 sppx_labels = unique(sppx);
 [labels_homog, labels_heter, sppx_dist_ratio] = homog_median_dist(Y2, sppx, sppx_labels, tau_homog, tau_outliers,'T','T');
 img_homog_percent = 100*length(labels_homog)/length(sppx_labels);
-fprintf('homog_sppx(%%) = %.1f %% \n', img_homog_percent);
-fprintf('--------------------------------------------------\n');
+fprintf('homog_sppx = %.1f %% \n', img_homog_percent);
+
 %% Plot final segmentation
 bands = [37 16 10];
 show_segments(Y2, sppx, bands);
@@ -120,4 +118,7 @@ show_segments(Y2, sppx, bands);
 %% Export
 save(strcat(path_output,'sppx.mat'),'sppx');
 exportgraphics(gcf,strcat(path_output,'sppx','.pdf'))
+
+
+
 

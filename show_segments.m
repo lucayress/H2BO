@@ -6,5 +6,6 @@ s = find(sx | sy);
 imp = imgColor;
 imp([s s+numel(im(:,:,1)) s+2*numel(im(:,:,1))]) = 0;
 % figure;
+figure, set(gcf,'color', 'white')
 imagesc(imp) ; axis image off ;
 end
