@@ -23,7 +23,7 @@ It also includes code associated to the paper [2].
 
 * Other public hyperspectral datasets such as Cuprite, Indian Pines, and Salinas are available on the [UPV/EHU](http://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes) wiki.
 
-## References:
+## REFERENCES:
 
 [2] A Fast Multiscale Spatial Regularization for Sparse Hyperspectral Unmixing.
 R.A. Borsoi, T. Imbiriba, J.C.M. Bermudez, C. Richard.
