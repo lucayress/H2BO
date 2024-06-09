@@ -20,11 +20,11 @@ randn('state',10);
 
 %% INPUT Parameters
 
-SNR = 20;
+SNR = 30;
 path_data = 'data/';
 path_output = 'output/';
 addpath('utils')
-image_name = 'DC3';  % dataset
+image_name = 'DC2';  % dataset
 
 slic_reg     = 0.00225;
 slic_size    = [8 7 4 3];
@@ -69,7 +69,7 @@ supp = 2:p+1;
 M = A(:, supp);
 [L, p] = size(M);  % L = number of bands; p = number of material
 
-%% Generate the observed data Y
+%% Add noise
 
 % set noise standard deviation
 sigma = sqrt(sum(sum((M*X).^2))/N/L/10^(SNR/10));
@@ -84,16 +84,14 @@ scale = sqrt(L/sum(filter_coef.^2));
 filter_coef = scale*filter_coef;
 noise = idct(dct(noise).*repmat(filter_coef,1,N));
 
-%  observed spectral vector
+%% Generate the observed data Y
 Y = M*X + noise;
 
 % reorder and rescale data into 2-D array
-Y2 = reshape(Y', nl, nc, L); % hyperspectral data cube
+Y2 = reshape(Y', nl, nc, L); 
 [numRows,numCols,numSpectra] = size(Y2);
 scfact = mean(reshape(sqrt(sum(Y2.^2,3)), numRows*numCols, 1));
-Y2 = Y2./scfact;
-
-tic
+Y2 = Y2./scfact;    % hyperspectral data cube
 
 %% Hierarchical Homogeneity-Based Oversegmentation (H2BO)
 fprintf('--------------------------------------------------\n');
@@ -107,9 +105,11 @@ time = toc;
 
 %% Homogeneity test - final oversegmentation
 fprintf('\nFinal oversegmentation:\n');
+
 sppx_labels = unique(sppx);
 [labels_homog, labels_heter, sppx_dist_ratio] = homog_median_dist(Y2, sppx, sppx_labels, tau_homog, tau_outliers,'verbose','F');
 img_homog_percent = 100*length(labels_homog)/length(sppx_labels);
+
 fprintf('homog_sppx(%%) = %.1f %% \n', img_homog_percent);
 fprintf('exec_time\t  = %.2f s\n',time);
 fprintf('--------------------------------------------------\n');

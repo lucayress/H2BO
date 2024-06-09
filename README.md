@@ -6,19 +6,17 @@ This is the authors' implementation of the manuscript [1] in reviewing process. 
         L. C. Ayres, S.J.M. de Almeida, J.C.M. Bermudez, R.A. Borsoi.
         International Journal of Remote Sensing, 2024.
 
-The code is implemented in MATLAB R2022a and includes the main files:
--  H2BO.m 
--  demo_H2BO.m
--  ./data/DC1.mat
--  ./data/DC2.mat
--  ./data/DC3.mat               
+The algorithm is implemented in MATLAB R2022a and includes the main files and directories:
+-  H2BO.m		- function that performs H2BO segmentation on hyperspectral data.
+-  demo_H2BO.m	- presents a demonstration of the use of the H2BO function.
+-  ./data/ 		- contains the DC1, DC2 and DC3 datasets.
+-  ./output/ 	- contains the exported files.
+-  ./utils/ 	- contains auxiliary functions.       
 It also includes code associated to the paper [2].
 
 ## INSTALLING & RUNNING:
-Just start MATLAB and run the script demo_H2BO.m .
-
-### Important Notice About VLFeat
-If you encounter problems with the "vl_slic" or "vl_setup" functions, try to download the latest version of the toolbox at http://www.vlfeat.org/install-matlab.html.
+* Download the latest version of the VLFeat toolbox at http://www.vlfeat.org/install-matlab.html.
+* Start MATLAB and run the script `demo_H2BO.m`.
 
 ## NOTES:
 	* The unmixing and classification tasks can be completed, just like in the original study, using the superpixels produced via H2BO or another segmentation approach. The MUA [2] algorithm from R. Borsoi was used for the unmixing experiments, and the CEGCN [3] implemetation by Q. Liu was employed in the classification simulations.
