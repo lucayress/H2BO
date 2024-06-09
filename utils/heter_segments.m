@@ -1,4 +1,5 @@
 function [new_segments, labels, numSuperpixels] = heter_segments(im, segments, labels_heter, slic_size, slic_reg)
+
 nl = size(im,1);
 nc = size(im,2);
 %N = nl*nc;         % number of pixels

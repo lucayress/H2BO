@@ -1,4 +1,4 @@
-function [labels_homog, labels_heter, sppx_dist_ratio] = homog_median_dist(im, segments, labels, tau_homog, tau_outliers, show1, show2)
+function [labels_homog, labels_heter, sppx_dist_ratio] = homog_median_dist(im, segments, labels, tau_homog, tau_outliers, verbose, show)
 nl = size(im,1);
 nc = size(im,2);
 N = nl*nc;
@@ -44,17 +44,15 @@ ind_homog = find(sppx_dist_ratio <= tau_homog);
 labels_homog = labels(ind_homog,:);
 ind_heter = find(sppx_dist_ratio > tau_homog);
 labels_heter = labels(ind_heter,:);
-if strcmp(show1,'T')
-    fprintf('heter_sppx = %g \n', length(ind_heter));
-    fprintf('homog_sppx = %g \n', length(ind_homog));
-    img_homog_percent = 100*length(ind_homog)/length(ind_heter);
-    fprintf('homog_sppx = %.1f %% \n', img_homog_percent);
-
+if strcmp(verbose,'verbose')
+    fprintf('num_sppx\t  = %d\n',length(ind_heter)+length(ind_homog));
+    fprintf('heter_sppx\t  = %g \n', length(ind_heter));
+    fprintf('homog_sppx\t  = %g \n', length(ind_homog));
 end
 
 %% Display superpixels homogeneity classification
 
-if strcmp(show2,'T')
+if strcmp(show,'show')
     % Homogeneous = 1 (white)
     im_homog = im;
     for i=1:length(labels_homog)
