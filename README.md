@@ -19,18 +19,18 @@ It also includes code associated to the paper [2].
 * Start MATLAB and run the script `demo_H2BO.m`.
 
 ## NOTES:
-	* The unmixing and classification tasks can be completed, just like in the original study, using the superpixels produced via H2BO or another segmentation approach. The MUA [2] algorithm from R. Borsoi was used for the unmixing experiments, and the CEGCN [3] implemetation by Q. Liu was employed in the classification simulations.
+* The unmixing and classification tasks can be completed, just like in the original study, using the superpixels produced via H2BO or another segmentation approach. The MUA [2] algorithm from R. Borsoi was used for the unmixing experiments, and the CEGCN [3] implemetation by Q. Liu was employed in the classification simulations.
 
-	* Other public hyperspectral datasets such as Cuprite, Indian Pines, and Salinas are available on the [UPV/EHU](http://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes) wiki.
+* Other public hyperspectral datasets such as Cuprite, Indian Pines, and Salinas are available on the [UPV/EHU](http://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes) wiki.
 
 ## References:
 
-	[2] A Fast Multiscale Spatial Regularization for Sparse Hyperspectral Unmixing.
+[2] A Fast Multiscale Spatial Regularization for Sparse Hyperspectral Unmixing.
         R.A. Borsoi, T. Imbiriba, J.C.M. Bermudez, C. Richard.
         IEEE Geoscience and Remote Sensing Letters, 2018.
 		https://github.com/ricardoborsoi/MUA_SparseUnmixing
 		
-	[3] CNN-Enhanced Graph Convolutional Network with Pixel- and Superpixel-Level Feature Fusion for Hyperspectral Image Classification.
+[3] CNN-Enhanced Graph Convolutional Network with Pixel- and Superpixel-Level Feature Fusion for Hyperspectral Image Classification.
 		Q. Liu, L. Xiao, J. Yang and Z. Wei.
 		IEEE Transactions on Geoscience and Remote Sensing, 2019.
 		https://github.com/qichaoliu/CNN_Enhanced_GCN 
