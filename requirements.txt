@@ -1,0 +1,5 @@
+numpy
+scipy
+scikit-image>=0.24
+matplotlib
+pytest

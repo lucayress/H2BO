@@ -1,41 +1,127 @@
-# Hierarchical Homogeneity-Based Oversegmentation (H2BO)
+# Hierarchical Homogeneity-Based Oversegmentation (H2BO) - Python Port
 
-This is the authors' implementation of the paper [1]. If you use this software please cite the following in any resulting publication:
+This branch contains the Python port of the H2BO MATLAB implementation from the `main` branch of this repository.
 
-    [1] Ayres, L. C., de Almeida, S. J. M., Bermudez, J. C. M., & Borsoi, R. A. (2024). 
-	Hierarchical homogeneity-based superpixel segmentation: application to hyperspectral image analysis. 
-	International Journal of Remote Sensing, 45(17), 6004–6042. 
-	https://doi.org/10.1080/01431161.2024.2384098
+The `main` branch is preserved as the MATLAB implementation associated with the published paper. Use this branch when you want to run H2BO with Python tooling and `scikit-image`.
 
-The algorithm is implemented in MATLAB R2022a and includes the main files and directories:
--  H2BO.m		- function that performs H2BO segmentation on hyperspectral data.
--  demo_H2BO.m	- presents a demonstration of the use of the H2BO function.
--  ./data/ 		- contains the DC1, DC2 and DC3 datasets.
--  ./output/ 	- contains the exported files.
--  ./utils/ 	- contains auxiliary functions.       
-It also includes code associated to the paper [2].
+If you use this software, please cite:
 
-## INSTALLING & RUNNING:
-* Download the latest version of the VLFeat toolbox at http://www.vlfeat.org/install-matlab.html.
-* Start MATLAB and run the script `demo_H2BO.m`.
+    [1] Ayres, L. C., de Almeida, S. J. M., Bermudez, J. C. M., & Borsoi, R. A. (2024).
+    Hierarchical homogeneity-based superpixel segmentation: application to hyperspectral image analysis.
+    International Journal of Remote Sensing, 45(17), 6004-6042.
+    https://doi.org/10.1080/01431161.2024.2384098
 
-## PYTHON VERSION:
-* A Python port of this implementation is available on the `python` branch of this repository. The `main` branch remains the MATLAB implementation associated with the published paper.
+## Quick Start
 
-## NOTES:
-* The unmixing and classification tasks can be performed, just like in the original study, using the superpixels produced via H2BO or another over/segmentation approach. The MUA [2] algorithm from R. Borsoi was used in the unmixing experiments, and the CEGCN [3] implemetation by Q. Liu was employed in the classification simulations.
+### 1. Install dependencies
 
-* Other public hyperspectral datasets such as Cuprite, Indian Pines, and Salinas are available on the [UPV/EHU](http://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes) wiki.
+```bash
+pip install -r requirements.txt
+```
 
-## REFERENCES:
+### 2. Prepare demo cubes
 
-[2] A Fast Multiscale Spatial Regularization for Sparse Hyperspectral Unmixing.
-R.A. Borsoi, T. Imbiriba, J.C.M. Bermudez, C. Richard.
-IEEE Geoscience and Remote Sensing Letters, 2018.
-https://github.com/ricardoborsoi/MUA_SparseUnmixing
-		
-[3] CNN-Enhanced Graph Convolutional Network with Pixel- and Superpixel-Level Feature Fusion for Hyperspectral Image Classification.
-Q. Liu, L. Xiao, J. Yang and Z. Wei.
-IEEE Transactions on Geoscience and Remote Sensing, 2019.
-https://github.com/qichaoliu/CNN_Enhanced_GCN 
- 
+```bash
+python scripts/prepare_demo_cubes.py
+```
+
+This reads the original MATLAB demo inputs from `data/` and generates:
+
+- `data/DC1_Y2.mat`
+- `data/DC2_Y2.mat`
+- `data/DC3_Y2.mat`
+
+These generated cubes are ignored by git. They can be regenerated at any time from the original data files kept in this branch.
+
+### 3. Run one segmentation
+
+```bash
+python h2bo.py --dataset DC2 --slic-size 8 --slic-reg 5
+```
+
+Outputs are saved to `output/sppx.mat` and `output/sppx.pdf`. Figures are written as tight-layout PDFs.
+
+### 4. Run hierarchical segmentation
+
+```bash
+python h2bo.py --dataset DC1 --slic-size 30 20 12 8 4 --slic-reg 0.5
+```
+
+### 5. Generate a parameter grid
+
+```bash
+python h2bo.py --grid
+```
+
+The default grid compares single-scale SLIC sizes `15`, `12`, `8`, and `6` against Python/skimage compactness values `0.5`, `1`, `2`, and `5`.
+
+## CLI
+
+```bash
+python h2bo.py --help
+```
+
+Useful options:
+
+- `--dataset DC1|DC2|DC3`: dataset to load.
+- `--slic-size 8`: run one SLIC scale.
+- `--slic-size 8 7 4 3`: run hierarchical refinement.
+- `--slic-reg 5`: set the skimage SLIC compactness parameter.
+- `--tau-outliers 10`: set outlier trimming percentage.
+- `--tau-homog 20`: set the homogeneity threshold.
+- `--bands 36 15 9`: set zero-based false-colour display bands.
+- `--grid`: create a DC1 single-scale size/compactness tuning grid.
+
+`demo_h2bo.py` is kept as a compatibility wrapper and forwards to the same CLI.
+
+## Python API
+
+```python
+from h2bo import h2bo
+
+sppx = h2bo(data)                          # returns a 2-D label map
+sppx, info = h2bo(data, return_info=True)  # also returns metadata
+sppx = h2bo(data, slic_size=8)             # one scale
+```
+
+### Parameters
+
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | `np.ndarray` | - | Hyperspectral cube `(rows, cols, bands)` |
+| `slic_size` | `int` or `Sequence[int]` | `(8, 7, 4, 3)` | Region sizes per scale |
+| `slic_reg` | `float` | `5.0` | skimage SLIC compactness |
+| `tau_outliers` | `float` | `10` | Percentage of outlier distances to trim |
+| `tau_homog` | `float` | `20` | Homogeneity ratio threshold |
+| `verbose` | `bool` | `False` | Print per-round statistics |
+| `return_info` | `bool` | `False` | Return metadata dict |
+
+## Project Structure
+
+```text
+H2BO/
+|-- h2bo.py
+|-- demo_h2bo.py
+|-- requirements.txt
+|-- README.md
+|-- reference_paper.pdf
+|-- data/
+|   |-- DC1.mat
+|   |-- DC2.mat
+|   |-- DC3.mat
+|   `-- USGS_1995_Library.mat
+|-- scripts/
+|   `-- prepare_demo_cubes.py
+|-- tests/
+`-- utils/
+```
+
+## Differences From The MATLAB Main Branch
+
+- This branch uses `skimage.segmentation.slic` instead of VLFeat `vl_slic`.
+- The Python `slic_reg` argument maps to skimage compactness, not directly to the VLFeat regularizer.
+- On DC1, MATLAB/VLFeat `slic_reg=0.00225` gives matching single-scale label counts with Python/skimage compactness around `1` to `5`; the default `5` matched the tested sizes `15`, `12`, `8`, and `6`.
+- Demo cubes are generated with MATLAB-compatible column-major spatial order (`order="F"`) to preserve the orientation of the original MATLAB data.
+- Segment boundary figures use single-pixel contours and are saved as PDF.
+- Exact pixel-level parity with MATLAB/VLFeat is not expected.
+- Downstream unmixing and classification workflows are not included.

@@ -16,7 +16,21 @@ codegen/
 html/
 *.log
 
+# Python caches, environments, and packaging
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.venv/
+venv/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
 # Generated demo outputs
+data/*_Y2.mat
+output/
 output/*.mat
 output/*.pdf
 output/*.png
