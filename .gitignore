@@ -1,0 +1,42 @@
+# MATLAB generated files
+*.asv
+*.m~
+*.mat
+*.mex*
+*.fig
+*.slxc
+*.mlappinstall
+*.mltbx
+*.prj
+
+# MATLAB/Simulink caches and reports
+slprj/
+sccprj/
+codegen/
+html/
+*.log
+
+# Generated demo outputs
+output/*.mat
+output/*.pdf
+output/*.png
+output/*.jpg
+output/*.jpeg
+output/*.tif
+output/*.tiff
+
+# Local third-party dependencies
+vlfeat-*/
+vlfeat-*.tar.gz
+vlfeat-*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo

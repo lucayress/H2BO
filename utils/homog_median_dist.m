@@ -12,14 +12,13 @@ sppx_dist_max = zeros(1, numSuperpixels);
 sppx_dist_max_trim = zeros(1, numSuperpixels);
 sppx_dist_ratio = zeros(1, numSuperpixels);
 
-% Reshape image to 2D for vectorised pixel extraction (Issue 5 fix)
+% Reshape image to 2D for vectorised pixel extraction
 im_2d = reshape(im, N, L);  % (N x L)
 
 for i=1:numSuperpixels
     [rowi, coli] = find(segments==labels(i));
     n_pix = length(rowi);
 
-    % Vectorised pixel extraction (replaces per-pixel for-loop)
     idx = sub2ind([nl, nc], rowi, coli);
     sp_pixels = im_2d(idx, :)';  % (L x n_pix) - same layout as original sppx(:,1:j,i)
 
