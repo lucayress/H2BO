@@ -4,41 +4,42 @@ nc = size(im,2);
 N = nl*nc;
 L = size(im,3);
 
-aa = 200;
-
 numSuperpixels = length(labels);
-sppx = zeros(L, ceil(N/aa), numSuperpixels);
-sppx_median = zeros(L, 1, numSuperpixels);
-sppx_dist = zeros(1, ceil(N/aa), numSuperpixels);
 
-sppx_dist_avg_trim = zeros(1,1,numSuperpixels);
-sppx_dist_max = zeros(1,1,numSuperpixels);
-sppx_dist_max_trim = zeros(1,1,numSuperpixels);
+% Pre-allocate only the scalar outputs (1 value per superpixel)
+sppx_dist_avg_trim = zeros(1, numSuperpixels);
+sppx_dist_max = zeros(1, numSuperpixels);
+sppx_dist_max_trim = zeros(1, numSuperpixels);
+sppx_dist_ratio = zeros(1, numSuperpixels);
+
+% Reshape image to 2D for vectorised pixel extraction (Issue 5 fix)
+im_2d = reshape(im, N, L);  % (N x L)
 
 for i=1:numSuperpixels
     [rowi, coli] = find(segments==labels(i));
-    for j=1:length(rowi)
-        sppx(:,j,i) = im(rowi(j),coli(j),:);
+    n_pix = length(rowi);
+
+    % Vectorised pixel extraction (replaces per-pixel for-loop)
+    idx = sub2ind([nl, nc], rowi, coli);
+    sp_pixels = im_2d(idx, :)';  % (L x n_pix) - same layout as original sppx(:,1:j,i)
+
+    sp_median = median(sp_pixels, 2);  % (L x 1)
+
+    % Compute distances from median (vectorised)
+    diffs = sp_pixels - repmat(sp_median, 1, n_pix);  % (L x n_pix)
+    sp_dist = sqrt(sum(diffs.^2, 1));  % (1 x n_pix) Euclidean norms
+
+    sppx_dist_avg_trim(i) = mean(remove_top(sp_dist, tau_outliers));
+    sppx_dist_max(i) = max(sp_dist);
+    sppx_dist_max_trim(i) = max(remove_top(sp_dist, tau_outliers));
+
+    sppx_dist_ratio(i) = 100*(sppx_dist_max_trim(i) - sppx_dist_avg_trim(i))/sppx_dist_avg_trim(i);
+    if isnan(sppx_dist_ratio(i))
+        sppx_dist_ratio(i) = 0; % if value is NaN then turn into 0.
     end
-    sppx_median(:,1,i) = median(sppx(:,1:j,i),2);
-
-    % angles and distances
-    for j=1:length(rowi)
-        u = sppx_median(:,1,i);
-        v = squeeze(im(rowi(j),coli(j),:));
-        sppx_dist(:,j,i) = norm(u-v);
-    end
-
-    sppx_dist_avg_trim(:,1,i) = mean(remove_top(sppx_dist(:,1:j,i), tau_outliers));
-    sppx_dist_max(:,1,i) = max(sppx_dist(:,1:j,i));
-    sppx_dist_max_trim(:,1,i) = max(remove_top(sppx_dist(:,1:j,i), tau_outliers));
-
-    sppx_dist_ratio(:,1,i) = 100*(sppx_dist_max_trim(:,1,i) - sppx_dist_avg_trim(:,1,i))/sppx_dist_avg_trim(:,1,i);
-    indef = isnan(sppx_dist_ratio);
-    sppx_dist_ratio(indef == 1) = 0; % if values is NaN then turn into 0.
 end
 
-sppx_dist_ratio = squeeze(sppx_dist_ratio)';
+sppx_dist_ratio = sppx_dist_ratio';
 
 ind_homog = find(sppx_dist_ratio <= tau_homog);
 labels_homog = labels(ind_homog,:);

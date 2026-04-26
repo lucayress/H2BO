@@ -1,8 +1,9 @@
 function sppx = H2BO(data, slic_size, slic_reg, tau_outliers, tau_homog, verbose)
 
 %% Set VL_feat toolbox
-vlfeat_path = '';
-run(strcat(vlfeat_path,'vlfeat-0.9.21/toolbox/vl_setup'));
+% Issue 8 fix: resolve path relative to this file's location
+h2bo_dir = fileparts(mfilename('fullpath'));
+run(fullfile(h2bo_dir, 'vlfeat-0.9.21', 'toolbox', 'vl_setup'));
 
 %% Hierarchical Homogeneity-Based Superpixel Segmentation
 R = length(slic_size)-1;
