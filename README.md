@@ -19,6 +19,9 @@ It also includes code associated to the paper [2].
 * Download the latest version of the VLFeat toolbox at http://www.vlfeat.org/install-matlab.html.
 * Start MATLAB and run the script `demo_H2BO.m`.
 
+## PYTHON VERSION:
+* A Python port of this implementation is available on the `python` branch of this repository. The `main` branch remains the MATLAB implementation associated with the published paper.
+
 ## NOTES:
 * The unmixing and classification tasks can be performed, just like in the original study, using the superpixels produced via H2BO or another over/segmentation approach. The MUA [2] algorithm from R. Borsoi was used in the unmixing experiments, and the CEGCN [3] implemetation by Q. Liu was employed in the classification simulations.
 
