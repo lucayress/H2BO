@@ -1,10 +1,11 @@
 # Hierarchical Homogeneity-Based Oversegmentation (H2BO)
 
-This is the authors' implementation of the manuscript [1] in reviewing process. If you use this software please cite the following in any resulting publication:
+This is the authors' implementation of the paper [1]. If you use this software please cite the following in any resulting publication:
 
-    [1] Hierarchical Homogeneity-Based Superpixel Segmentation: Application to Hyperspectral Image Analysis
-        L. C. Ayres, S.J.M. de Almeida, J.C.M. Bermudez, R.A. Borsoi.
-        International Journal of Remote Sensing, 2024.
+    [1] Ayres, L. C., de Almeida, S. J. M., Bermudez, J. C. M., & Borsoi, R. A. (2024). 
+	Hierarchical homogeneity-based superpixel segmentation: application to hyperspectral image analysis. 
+	International Journal of Remote Sensing, 45(17), 6004–6042. 
+	https://doi.org/10.1080/01431161.2024.2384098
 
 The algorithm is implemented in MATLAB R2022a and includes the main files and directories:
 -  H2BO.m		- function that performs H2BO segmentation on hyperspectral data.
